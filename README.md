@@ -118,7 +118,7 @@ async function clearStorage() {
 
 ### Error handling
 
-Take the `removeItem` example, an error can occur when trying to remove a value which does not exist, or for any other reason. This module forwards the native iOS Security framework error codes to help with debugging.
+Each function this library may natively throw or for many reasons. This module forwards the native iOS Security framework error codes to help with debugging.
 
 ```js
 async function removeUserSession() {
@@ -127,7 +127,7 @@ async function removeUserSession() {
     } catch (error) {
         // There was an error on the native side
         // You can find out more about this error by using the `error.code` property
-        console.log(error.code); // ex: -25300 (errSecItemNotFound)
+        console.log(error.code); // ex: -26275 (errSecDecode)
     }
 }
 ```
