@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Alert, SafeAreaView, StyleSheet, Text } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { ButtonWorker } from './components/ButtonWorker/ButtonWorker';
@@ -9,7 +9,7 @@ import { WorkCallback } from './components/ButtonWorker/ButtonWorkerProps';
  */
 const STORAGE_KEY = 'RANDOM_VALUE';
 
-export const App: FC = () => {
+export function App() {
   /**
    * Saves a random number to the device storage
    * @param {Function} done The function to call when the operation completes
@@ -96,7 +96,7 @@ export const App: FC = () => {
       <ButtonWorker title="Clear storage" onPress={clearValues} />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   wrapper: {
