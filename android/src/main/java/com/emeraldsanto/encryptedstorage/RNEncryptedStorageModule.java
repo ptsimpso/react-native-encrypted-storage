@@ -3,12 +3,17 @@ package com.emeraldsanto.encryptedstorage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableNativeArray;
 
 public class RNEncryptedStorageModule extends ReactContextBaseJavaModule {
 
@@ -40,6 +45,7 @@ public class RNEncryptedStorageModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @NonNull
     @Override
     public String getName() {
         return RNEncryptedStorageModule.NATIVE_MODULE_NAME;
@@ -66,15 +72,37 @@ public class RNEncryptedStorageModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getItem(String key, Promise promise) {
-        if (this.sharedPreferences == null) {
-            promise.reject(new NullPointerException("Could not initialize SharedPreferences"));
-            return;
+    public void multiGet(ReadableArray keys, Promise promise) {
+      if (this.sharedPreferences == null) {
+        promise.reject(new NullPointerException("Could not initialize SharedPreferences"));
+        return;
+      }
+
+      WritableArray values = new WritableNativeArray();
+
+      for (Object key : keys.toArrayList()) {
+        if (!(key instanceof String)) {
+          promise.reject(
+            new UnsupportedOperationException(
+              String.format(
+                "Unsupported key type, expected String but received {0}",
+                key == null ? "null" : key.getClass().getName()
+              )
+            )
+          );
+
+          return;
         }
 
-        String value = this.sharedPreferences.getString(key, null);
+        WritableArray pair = new WritableNativeArray();
 
-        promise.resolve(value);
+        pair.pushString((String) key);
+        pair.pushString(this.sharedPreferences.getString((String) key, null));
+
+        values.pushArray(pair);
+      }
+
+      promise.resolve(values);
     }
 
     @ReactMethod

@@ -55,11 +55,31 @@ export default class EncryptedStorage {
     cb?: StorageValueCallback
   ): void | Promise<string | null> {
     if (cb) {
-      RNEncryptedStorage.getItem(key).then(cb).catch(cb);
+      EncryptedStorage.multiGet([key])
+        .then((pairs) => cb(undefined, pairs[0]?.[1] ?? undefined))
+        .catch(cb);
+
       return;
     }
 
-    return RNEncryptedStorage.getItem(key);
+    return EncryptedStorage.multiGet([key]).then((pairs) => pairs[0]?.[1]);
+  }
+
+  static multiGet(keys: Array<string>): Promise<Array<[string, string | null]>>;
+  static multiGet(
+    keys: Array<string>,
+    cb: (error?: Error, value?: Array<[string | null]>) => void
+  ): void;
+  static multiGet(
+    keys: Array<string>,
+    cb?: (error?: Error, value?: Array<[string | null]>) => void
+  ) {
+    if (cb) {
+      RNEncryptedStorage.multiGet(keys).then(cb).catch(cb);
+      return;
+    }
+
+    return RNEncryptedStorage.multiGet(keys);
   }
 
   /**
