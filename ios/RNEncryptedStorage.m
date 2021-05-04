@@ -96,7 +96,7 @@ RCT_EXPORT_METHOD(removeItem:(NSString *)key resolver:(RCTPromiseResolveBlock)re
     
     OSStatus removeStatus = SecItemDelete((__bridge CFDictionaryRef)removeQuery);
     
-    if (removeStatus == noErr) {
+    if (removeStatus == noErr || removeStatus == errSecItemNotFound) {
         resolve(key);
     }
     
