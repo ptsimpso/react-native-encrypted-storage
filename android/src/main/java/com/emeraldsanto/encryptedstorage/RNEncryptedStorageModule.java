@@ -36,7 +36,6 @@ public class RNEncryptedStorageModule extends ReactContextBaseJavaModule {
 
         catch (Exception ex) {
             Log.e(NATIVE_MODULE_NAME, "Failed to create encrypted shared preferences! Failing back to standard SharedPreferences", ex);
-            this.sharedPreferences = context.getSharedPreferences(RNEncryptedStorageModule.SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
         }
     }
 
